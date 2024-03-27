@@ -1,16 +1,29 @@
-# This is a sample Python script.
 
-# Press Alt+Umschalt+X to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Strg+Umschalt+B to toggle the breakpoint.
+import pygame
+from constants import WIDTH, HEIGHT, FPS
+from draw import  draw_board, draw_pieces
 
 
-# Press the green button in the gutter to run the script.
+def run_game():
+    pygame.init()
+    screen = pygame.display.set_mode([WIDTH, HEIGHT])
+    pygame.display.set_caption('Two-Player Pygame Chess!')
+    font = pygame.font.Font(None, 20)
+    medium_font = pygame.font.Font(None, 40)
+    clock = pygame.time.Clock()
+    running = True
+
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+
+        draw_board(screen, font)
+        draw_pieces(screen, font)
+        pygame.display.flip()
+        clock.tick(FPS)
+
+    pygame.quit()
+
 if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    run_game()
