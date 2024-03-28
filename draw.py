@@ -2,7 +2,7 @@ import pygame
 from figures import *
 
 pygame.init()
-WIDTH = 1000
+WIDTH = 1200
 HEIGHT = 900
 screen = pygame.display.set_mode([WIDTH, HEIGHT])
 pygame.display.set_caption('Schach')
@@ -24,13 +24,16 @@ def draw_board(turn_step):
         pygame.draw.rect(screen, 'gray', [0, 800, WIDTH, 100])
         pygame.draw.rect(screen, 'gold', [0, 800, WIDTH, 100], 5)
         pygame.draw.rect(screen, 'gold', [800, 0, 200, HEIGHT], 5)
+        pygame.draw.rect(screen, 'gold', [1000, 0, 200, HEIGHT], 5)
         status_text = ['White: Select a Piece to Move!', 'White: Select a Destination!',
                        'Black: Select a Piece to Move!', 'Black: Select a Destination!']
         screen.blit(big_font.render(status_text[turn_step], True, 'black'), (20, 820))
         for i in range(9):
             pygame.draw.line(screen, 'black', (0, 100 * i), (800, 100 * i), 2)
             pygame.draw.line(screen, 'black', (100 * i, 0), (100 * i, 800), 2)
-        screen.blit(medium_font.render('FORFEIT', True, 'black'), (810, 830))
+        screen.blit(font.render('Fallen Figures', True, 'black'), (810, 830))
+        # Anpassung hier für "All Moves"
+        screen.blit(font.render('All Moves', True, 'black'), (1010, 830))
 
 
 # draw pieces onto board
