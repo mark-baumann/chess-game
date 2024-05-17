@@ -38,23 +38,25 @@ def print_board(white_locations, black_locations, white_pieces, black_pieces):
     print("  +----------------")
     print("  A B C D E F G H")
 
-# Funktion zum Löschen des Bildschirms
 def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
 
-# Hauptspiellogik
+def print_error_message(message):
+    print(f"\033[91m{message}\033[0m")
+
 def main():
     global turn_step, game_over
     turn = 'white'
     
     while not game_over:
-        clear_screen()
         print_board(white_locations, black_locations, white_pieces, black_pieces)
         print(f"{turn.capitalize()}'s turn. Enter the position to move (Syntax: e2 e4):")
         move = input().strip()
         
+        clear_screen()
+        
         if len(move) != 5 or move[2] != ' ':
-            print("Invalid input. Please enter in the format 'e2 e4'.")
+            print_error_message("Invalid input. Please enter in the format 'e2 e4'.")
             continue
         
         start_pos = (ord(move[0]) - ord('a'), int(move[1]) - 1)
@@ -72,24 +74,24 @@ def main():
                     black_locations.pop(capture_idx)
                     black_pieces.pop(capture_idx)
             else:
-                print("Invalid move. Try again.")
+                print_error_message("Invalid move. Try again.")
                 continue
         elif turn == 'black' and start_pos in black_locations:
             idx = black_locations.index(start_pos)
             piece = black_pieces[idx]
             valid_moves = check_options([piece], [start_pos], turn)[0]
             
-            if valid_moves:
+            if end_pos in valid_moves:
                 black_locations[idx] = end_pos
                 if end_pos in white_locations:
                     capture_idx = white_locations.index(end_pos)
                     white_locations.pop(capture_idx)
                     white_pieces.pop(capture_idx)
             else:
-                print("Invalid move. Try again.")
+                print_error_message("Invalid move. Try again.")
                 continue
         else:
-            print("Invalid move. It's not your turn or invalid piece.")
+            print_error_message("Invalid move. It's not your turn or invalid piece.")
             continue
         
         turn = 'black' if turn == 'white' else 'white'
