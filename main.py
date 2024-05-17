@@ -1,3 +1,4 @@
+import os
 from figures import white_pieces, white_locations, black_pieces, black_locations
 from moves import *
 
@@ -37,12 +38,17 @@ def print_board(white_locations, black_locations, white_pieces, black_pieces):
     print("  +----------------")
     print("  A B C D E F G H")
 
+# Funktion zum Löschen des Bildschirms
+def clear_screen():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
 # Hauptspiellogik
 def main():
     global turn_step, game_over
     turn = 'white'
     
     while not game_over:
+        clear_screen()
         print_board(white_locations, black_locations, white_pieces, black_pieces)
         print(f"{turn.capitalize()}'s turn. Enter the position to move (Syntax: e2 e4):")
         move = input().strip()
