@@ -11,7 +11,7 @@ game_over = False
 # Funktion zum Drucken des Schachbretts
 def print_board(white_locations, black_locations, white_pieces, black_pieces):
     board = [[' ' for _ in range(8)] for _ in range(8)]
-    
+
     piece_symbols = {
         'pawn': 'P',
         'rook': 'R',
@@ -20,23 +20,28 @@ def print_board(white_locations, black_locations, white_pieces, black_pieces):
         'queen': 'Q',
         'king': 'K'
     }
-    
+
     for i, location in enumerate(white_locations):
         piece = white_pieces[i]
         board[location[1]][location[0]] = piece_symbols[piece].upper()  # white pieces in uppercase
-    
+
     for i, location in enumerate(black_locations):
         piece = black_pieces[i]
         board[location[1]][location[0]] = piece_symbols[piece].lower()  # black pieces in lowercase
-    
-    print("  A B C D E F G H")
+
+    # ANSI-Escape-Sequenzen für rote Farbe
+    red = "\033[91m"
+    reset = "\033[0m"
+
+    # Schachbrett ausdrucken
+
     for i in range(8):
-        print(f"{8-i}|", end="")
+        print(f"{red}{8 - i}{reset}|", end="")
         for j in range(8):
-            print(board[7-i][j], end=" ")
-        print(f"|")
-    print("  +----------------")
-    print("  A B C D E F G H")
+            print(board[7 - i][j], end=" ")
+        print("|")
+    print(f"  {red}+--------------+{reset}")
+    print(f"  {red}A B C D E F G H{reset}")
 
 def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
