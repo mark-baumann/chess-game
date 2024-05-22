@@ -1,6 +1,7 @@
 import os
 from figures import white_pieces, white_locations, black_pieces, black_locations
 from moves import *
+from colorama import init, Fore, Back, Style
 
 turn_step = 0
 valid_moves = []
@@ -9,7 +10,10 @@ counter = 0
 game_over = False
 
 # Funktion zum Drucken des Schachbretts
+
 def print_board(white_locations, black_locations, white_pieces, black_pieces):
+    init(autoreset=True)
+
     board = [[' ' for _ in range(8)] for _ in range(8)]
 
     piece_symbols = {
@@ -29,19 +33,25 @@ def print_board(white_locations, black_locations, white_pieces, black_pieces):
         piece = black_pieces[i]
         board[location[1]][location[0]] = piece_symbols[piece].lower()  # black pieces in lowercase
 
-    # ANSI-Escape-Sequenzen für rote Farbe
-    red = "\033[91m"
-    reset = "\033[0m"
+    red = Fore.RED
+    reset = Style.RESET_ALL
+    black_square = Back.BLACK
+    gray_square = Back.LIGHTBLACK_EX  # Grau verwenden
 
     # Schachbrett ausdrucken
-
+    print("   " + f"{red}A  B  C  D  E  F  G  H{reset}")
     for i in range(8):
-        print(f"{red}{8 - i}{reset}|", end="")
+        print(f"{red}{8 - i}{reset} ", end="")
         for j in range(8):
-            print(board[7 - i][j], end=" ")
-        print("|")
-    print(f"  {red}+--------------+{reset}")
-    print(f"  {red}A B C D E F G H{reset}")
+            if (i + j) % 2 == 0:
+                square_color = gray_square
+            else:
+                square_color = black_square
+            print(f"{square_color} {board[7 - i][j]} {reset}", end="")
+        print(f" {red}{8 - i}{reset}")
+    print("   " + f"{red}A  B  C  D  E  F  G  H{reset}")
+
+
 
 def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
