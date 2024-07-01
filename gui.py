@@ -53,12 +53,37 @@ default_placement = {
 }
 
 # Setze den Titel der App
-st.title("Schachbrett mit allen Schachfiguren")
+st.title("Schachspiel in Python")
+
+# Eingabefeld für die Bewegung der Figuren auf der Startseite
+st.header("Figurenbewegung")
+move_input = st.text_input("Geben Sie die Bewegung ein (z.B. 'H2 H4'):")
 
 # Sidebar für die Positionseingabe
-st.sidebar.title("Figurenpositionierung")
+st.sidebar.title("Gezogene Züge")
 positions_input = st.sidebar.text_area("Geben Sie die neuen Positionen der Figuren ein (z.B. 'white_king E1'):")
 placement = parse_positions(positions_input) if positions_input else default_placement
+
+# Verarbeite die Bewegungseingabe
+if move_input:
+    parts = move_input.strip().split()
+    if len(parts) == 2:
+        start_pos, end_pos = parts
+        moved = False
+        for figure, positions in placement.items():
+            if isinstance(positions, list):
+                if start_pos in positions:
+                    positions[positions.index(start_pos)] = end_pos
+                    moved = True
+                    break
+            else:
+                if start_pos == positions:
+                    placement[figure] = end_pos
+                    moved = True
+                    break
+        if not moved:
+            st.warning(f"Keine Figur auf {start_pos} gefunden.")
+                
 
 # Definiere die Größe des Schachbretts und der Felder
 board_size = 8
