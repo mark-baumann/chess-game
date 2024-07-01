@@ -3,6 +3,7 @@ from figures import white_pieces, white_locations, black_pieces, black_locations
 from moves import *
 from colorama import init, Fore, Back, Style
 
+
 turn_step = 0
 valid_moves = []
 
@@ -114,3 +115,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
