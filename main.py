@@ -7,29 +7,36 @@ app = Flask(__name__)
 turn = 'white'
 
 def get_board_state():
-    board = [[' ' for _ in range(8)] for _ in range(8)]
+    board = [['' for _ in range(8)] for _ in range(8)]
     piece_symbols = {
-        'pawn': 'P',
-        'rook': 'R',
-        'knight': 'N',
-        'bishop': 'B',
-        'queen': 'Q',
-        'king': 'K'
+        'pawn': '/assets/white_pawn.png',
+        'rook': '/assets/white_rook.png',
+        'knight': '/assets/white_knight.png',
+        'bishop': '/assets/white_bishop.png',
+        'queen': '/assets/white_queen.png',
+        'king': '/assets/white_king.png',
+        'black_pawn': '/assets/black_pawn.png',
+        'black_rook': '/assets/black_rook.png',
+        'black_knight': '/assets/black_knight.png',
+        'black_bishop': '/assets/black_bishop.png',
+        'black_queen': '/assets/black_queen.png',
+        'black_king': '/assets/black_king.png'
     }
 
     for i, location in enumerate(white_locations):
         piece = white_pieces[i]
-        board[location[1]][location[0]] = piece_symbols[piece].upper()
+        board[location[1]][location[0]] = piece_symbols[piece]
 
     for i, location in enumerate(black_locations):
         piece = black_pieces[i]
-        board[location[1]][location[0]] = piece_symbols[piece].lower()
+        board[location[1]][location[0]] = piece_symbols['black_' + piece]
 
     return board
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    board = get_board_state()  # Stellen Sie sicher, dass diese Funktion aufgerufen wird.
+    return render_template('index.html', board=board)
 
 @app.route('/init', methods=['GET'])
 def init():

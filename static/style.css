@@ -1,23 +1,25 @@
 #board {
-    display: grid;
-    grid-template-columns: repeat(8, 60px);
-    grid-template-rows: repeat(8, 60px);
-    gap: 1px;
+    display: table;
+    margin: 0 auto;
 }
 
-.cell {
-    width: 60px;
+table {
+    border-collapse: collapse;
+}
+
+td {
+    width: 60px; /* Größe der Felder anpassen */
     height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid black;
+    border: 1px solid #333; /* Dunkler Rand für bessere Sichtbarkeit */
+    background-color: #fff; /* Weißer Hintergrund */
 }
 
-.cell:nth-child(even) {
-    background-color: gray;
+td.black {
+    background-color: #999; /* Dunklere Felder für das Schachbrett */
 }
 
-.cell.draggable {
-    cursor: move;
+img {
+    width: 100%; /* Bilder passen sich der Zellgröße an */
+    height: auto;
+    display: block;
 }
