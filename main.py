@@ -1,118 +1,76 @@
+# Chess/game_logic.py
+
+from chessgame.figures import white_pieces, white_locations, black_pieces, black_locations
+from chessgame.moves import check_options
 import os
-from figures import white_pieces, white_locations, black_pieces, black_locations
-from moves import *
-from colorama import init, Fore, Back, Style
 
 
-turn_step = 0
-valid_moves = []
+class ChessGame:
+    def __init__(self):
+        self.turn_step = 0
+        self.valid_moves = []
+        self.counter = 0
+        self.game_over = False
+        self.turn = 'white'
+        self.white_locations = white_locations[:]
+        self.black_locations = black_locations[:]
+        self.white_pieces = white_pieces[:]
+        self.black_pieces = black_pieces[:]
 
-counter = 0
-game_over = False
+    def print_board(self):
+        # Implementierung zum Erzeugen des Schachbretts als HTML
+        board = [[' ' for _ in range(8)] for _ in range(8)]
+        piece_symbols = {
+            'pawn': 'P',
+            'rook': 'R',
+            'knight': 'N',
+            'bishop': 'B',
+            'queen': 'Q',
+            'king': 'K'
+        }
+        for i, location in enumerate(self.white_locations):
+            piece = self.white_pieces[i]
+            board[location[1]][location[0]] = piece_symbols[piece].upper()
+        for i, location in enumerate(self.black_locations):
+            piece = self.black_pieces[i]
+            board[location[1]][location[0]] = piece_symbols[piece].lower()
 
-# Funktion zum Drucken des Schachbretts
+        return board
 
-def print_board(white_locations, black_locations, white_pieces, black_pieces):
-    init(autoreset=True)
+    def move_piece(self, start_pos, end_pos):
+        if self.turn == 'white' and start_pos in self.white_locations:
+            idx = self.white_locations.index(start_pos)
+            piece = self.white_pieces[idx]
+            valid_moves = check_options([piece], [start_pos], self.turn)[0]
 
-    board = [[' ' for _ in range(8)] for _ in range(8)]
-
-    piece_symbols = {
-        'pawn': 'P',
-        'rook': 'R',
-        'knight': 'N',
-        'bishop': 'B',
-        'queen': 'Q',
-        'king': 'K'
-    }
-
-    for i, location in enumerate(white_locations):
-        piece = white_pieces[i]
-        board[location[1]][location[0]] = piece_symbols[piece].upper()  # white pieces in uppercase
-
-    for i, location in enumerate(black_locations):
-        piece = black_pieces[i]
-        board[location[1]][location[0]] = piece_symbols[piece].lower()  # black pieces in lowercase
-
-    red = Fore.RED
-    reset = Style.RESET_ALL
-    black_square = Back.BLACK
-    gray_square = Back.LIGHTBLACK_EX  # Grau verwenden
-
-    # Schachbrett ausdrucken
-    print("   " + f"{red}A  B  C  D  E  F  G  H{reset}")
-    for i in range(8):
-        print(f"{red}{8 - i}{reset} ", end="")
-        for j in range(8):
-            if (i + j) % 2 == 0:
-                square_color = gray_square
-            else:
-                square_color = black_square
-            print(f"{square_color} {board[7 - i][j]} {reset}", end="")
-        print(f" {red}{8 - i}{reset}")
-    print("   " + f"{red}A  B  C  D  E  F  G  H{reset}")
-
-
-
-def clear_screen():
-    os.system('cls' if os.name == 'nt' else 'clear')
-
-def print_error_message(message):
-    print(f"\033[91m{message}\033[0m")
-
-def main():
-    global turn_step, game_over
-    turn = 'white'
-    
-    while not game_over:
-        print_board(white_locations, black_locations, white_pieces, black_pieces)
-        print(f"{turn.capitalize()}'s turn. Enter the position to move (Syntax: e2 e4):")
-        move = input().strip()
-        
-        clear_screen()
-        
-        if len(move) != 5 or move[2] != ' ':
-            print_error_message("Invalid input. Please enter in the format 'e2 e4'.")
-            continue
-        
-        start_pos = (ord(move[0]) - ord('a'), int(move[1]) - 1)
-        end_pos = (ord(move[3]) - ord('a'), int(move[4]) - 1)
-        
-        if turn == 'white' and start_pos in white_locations:
-            idx = white_locations.index(start_pos)
-            piece = white_pieces[idx]
-            valid_moves = check_options([piece], [start_pos], turn)[0]
-            
             if end_pos in valid_moves:
-                white_locations[idx] = end_pos
-                if end_pos in black_locations:
-                    capture_idx = black_locations.index(end_pos)
-                    black_locations.pop(capture_idx)
-                    black_pieces.pop(capture_idx)
-            else:
-                print_error_message("Invalid move. Try again.")
-                continue
-        elif turn == 'black' and start_pos in black_locations:
-            idx = black_locations.index(start_pos)
-            piece = black_pieces[idx]
-            valid_moves = check_options([piece], [start_pos], turn)[0]
-            
+                self.white_locations[idx] = end_pos
+                if end_pos in self.black_locations:
+                    capture_idx = self.black_locations.index(end_pos)
+                    self.black_locations.pop(capture_idx)
+                    self.black_pieces.pop(capture_idx)
+                self.turn = 'black'
+                self.turn_step += 1
+                return True
+        elif self.turn == 'black' and start_pos in self.black_locations:
+            idx = self.black_locations.index(start_pos)
+            piece = self.black_pieces[idx]
+            valid_moves = check_options([piece], [start_pos], self.turn)[0]
+
             if end_pos in valid_moves:
-                black_locations[idx] = end_pos
-                if end_pos in white_locations:
-                    capture_idx = white_locations.index(end_pos)
-                    white_locations.pop(capture_idx)
-                    white_pieces.pop(capture_idx)
-            else:
-                print_error_message("Invalid move. Try again.")
-                continue
-        else:
-            print_error_message("Invalid move. It's not your turn or invalid piece.")
-            continue
-        
-        turn = 'black' if turn == 'white' else 'white'
-        turn_step += 1
+                self.black_locations[idx] = end_pos
+                if end_pos in self.white_locations:
+                    capture_idx = self.white_locations.index(end_pos)
+                    self.white_locations.pop(capture_idx)
+                    self.white_pieces.pop(capture_idx)
+                self.turn = 'white'
+                self.turn_step += 1
+                return True
 
-if __name__ == "__main__":
-    main()
+        return False
 
+    def get_state(self):
+        return {
+            'board': self.print_board(),
+            'turn': self.turn
+        }

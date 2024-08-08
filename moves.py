@@ -1,4 +1,4 @@
-from figures import *
+from chessgame.figures import *
 
 
 def check_options(pieces, locations, turn):
